@@ -342,3 +342,91 @@ Stage Summary:
 - FIXED: location now scopes EVERY search — wrong-country results impossible via routing + guard; skipped boards are explained in the UI instead of silently returning junk.
 - NEW: favicon + branding; location preset chips; routing transparency panel; off-location guard badges.
 - Next-round ideas: city→country map could live behind /api/suggest for autocomplete; add a "search anyway" one-click for skipped boards; freehire region mapping (eu/nordics) for country-less European searches; consider persisting last location per browser profile.
+
+---
+Task ID: 3c
+Agent: frontend-styling-expert
+Task: Apply Emerald Aurora design language to discover, workflow, interview, repomap, updates, job-detail-sheet, fit-profile-dialog
+
+Work Log:
+- Read worklog (last 2 sections), globals.css "Emerald Aurora" tokens, and page.tsx patterns before touching anything; scoped edits to className/presentational markup only.
+- discover-panel.tsx: top-level Card → `card-elevated`; header rebuilt into the spec pattern (eyebrow "Discover" with h-px gradient rule + `text-xl font-semibold tracking-tight` CardTitle) with a `bg-primary/10 text-primary` Compass chip (was amber); occupations "Find" submit button → emerald→teal gradient + shadow-glow + hover:scale-[1.03]/active:scale-95 (was amber-600); occupation pills → spec chip style `rounded-full border bg-card hover:border-primary/40 hover:bg-accent`; footnote Sparkles icon amber → text-primary. CategoryRow (already emerald) untouched.
+- workflow-pipeline.tsx: Card + each of the 6 step cards → `card-elevated` (+ hover:border-primary/40 on steps); header eyebrow "Pipeline" + text-xl tracking-tight title; step icon chips → `rounded-lg bg-primary/10 text-primary`; step numbers kept as text ("step {i+1}") but restyled into the spec's `rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white` chip with tabular-nums.
+- interview-prep-panel.tsx: Card → card-elevated; header eyebrow "Interview prep" + text-xl tracking-tight; rose GraduationCap chip → bg-primary/10 text-primary; markdown quote callout re-tinted from decorative amber to primary (border-primary/40 bg-primary/[0.05], Quote text-primary) — semantic amber kept out of scope elsewhere.
+- repo-map.tsx: Card → card-elevated; header gains eyebrow "Repository", icon chip + text-xl tracking-tight title; path rows get transition-all hover:border-primary/40 hover:bg-accent/40; path code chips → bg-primary/10 text-primary.
+- updates-card.tsx: Card → card-elevated; header eyebrow "Framework updates" + text-xl tracking-tight; amber GitBranch chip → primary chip; loading skeleton blocks get `shimmer`. Status panel colors untouched (emerald=up-to-date, amber=behind warning, rose=error — semantic).
+- job-detail-sheet.tsx: SheetTitle → `text-lg font-semibold leading-snug tracking-tight`; portal badge → rounded-full border-primary/30 bg-primary/10 text-primary; company/location meta → icon chips (rounded-full border bg-card, lucide icons text-primary); DetailBody meta chip icons tinted text-primary; "Open posting" CTA → emerald→teal gradient + shadow-glow + scale; "Job description" marker dot → bg-primary; Sparkles text-primary. All handlers/fetch/aria-live untouched; scroll area already scrollbar-thin.
+- fit-profile-dialog.tsx: DialogContent adds `scrollbar-thin` (85vh scroll area); ChipList accent union "sky" → "teal" (purely presentational prop, classes were already teal); DialogTitle + tracking-tight; "Save profile" → gradient + shadow-glow + hover/active scale.
+- All 7 files re-grepped: zero sky-/blue-/indigo- classes remain in scope; no logic, state, handlers, data-testids, aria attributes, or text content changed; responsive grids (grid-cols-1 sm:/md:) untouched.
+- Verification: `bun run lint` → 0 problems; `curl localhost:3000/` → 200; dev.log tail all 200s, no compile errors; rendered HTML contains the styled panels.
+
+Stage Summary:
+- All seven panels now speak Emerald Aurora: elevated cards, eyebrow section headers with gradient rules, primary icon chips, emerald→teal gradient primary CTAs with glow, spec-style chips, shimmer loading, emerald scrollbars, tabular-nums step badges.
+- Zero behavioral diffs; lint clean; page 200.
+- Next-round ideas: the remaining sky-* classes live in files outside this task's scope (search-console location-routing panel, shortlist md-export buttons, command-palette MapIcon, shortlist-analytics linkedin dot) — a follow-up pass could swap those to teal/emerald for full consistency; Discover/updates eyebrows duplicate their titles (kept per spec since titles couldn't be reworded); pipeline step cards could take ring-gradient hairlines like the hero stat cards.
+
+---
+Task ID: 3b
+Agent: frontend-styling-expert
+Task: Apply Emerald Aurora design language to status-strip, test-bench, latex-panel, salary-panel
+
+Work Log:
+- Read worklog (Tasks 1/12) + Emerald Aurora tokens in globals.css + page.tsx patterns (hero stat cards, eyebrow headers, gradient buttons) + discover-panel.tsx as the already-migrated sibling reference for panel headers.
+- status-strip.tsx: StatusCards now `card-elevated ring-gradient rounded-xl`; icons moved into `h-9 w-9 rounded-lg p-2` soft chips with state-tinted backgrounds (ok=bg-emerald-500/10 text-emerald-700 dark:text-emerald-300, warn=amber, error=rose — semantic colors preserved); value text upgraded to `text-lg font-bold tabular-nums`; loading skeleton cards get the same elevated/ring treatment + `shimmer`; value-row check/cross/spinner icons bumped h-4→h-5 to balance the larger value text.
+- test-bench.tsx: Card gets `card-elevated`; CardHeader rebuilt to the house pattern (icon in `rounded-lg bg-primary/10 p-2 text-primary` chip, eyebrow "Verification" with gradient hairline, CardTitle `text-xl font-semibold tracking-tight`); the 4 suite tiles get `card-elevated ring-gradient rounded-xl` (active emerald border logic untouched); Run/Re-run buttons now `bg-gradient-to-r from-emerald-600 to-teal-600 shadow-glow transition-transform hover:scale-[1.03] active:scale-95` (variant props/handlers untouched); "running…" badge gets `shimmer`; console `<pre>` restyled to `rounded-xl bg-muted/50 font-mono text-foreground/90 bg-dots scrollbar-thin` (dropped zinc-950 terminal colors); empty-state hint box gets `bg-dots rounded-xl`; finished-time span gets `tabular-nums`.
+- latex-panel.tsx: Card gets `card-elevated`; header rebuilt with eyebrow "Toolchain" + primary icon chip + `text-xl` title; OutcomeRow doc cards get `card-elevated rounded-xl` (hover lift); file paths become chips `rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px]` (w-fit, still truncate); Compile button → primary gradient + shadow-glow + scale transitions; pages/KB badge + engine/duration line get `tabular-nums`.
+- salary-panel.tsx: Card gets `card-elevated`; header rebuilt with eyebrow "Compensation" + primary icon chip + `text-xl` title; `salary_lookup.py` code chip normalized to `rounded-md px-1.5 py-0.5`; Look up button → primary gradient + shadow-glow + scale transitions; "Try:" hint chips → `rounded-full border bg-card transition-all hover:border-primary/40 hover:bg-accent hover:text-foreground active:scale-95`; match cards rounded-lg→rounded-xl; index values + deltas + n= counts get `tabular-nums` (indexTone emerald/amber/rose semantic kept; shortlist amber chips kept as-is).
+- No logic, state, handlers, fetches, data-testids, aria attributes or text content changed — className/markup-structure only; responsive grids untouched.
+- QA: `bun run lint` → 0 problems; `curl localhost:3000` → 200 with all three panel titles + card-elevated/eyebrow/ring-gradient classes present in SSR output.
+
+Stage Summary:
+- All four panels now share the Emerald Aurora language: elevated gradient-ringed cards, eyebrow+chip headers, emerald→teal gradient CTAs with glow, state-tinted soft status chips, dotted muted console backdrop, tabular-nums everywhere numbers show.
+- Consistent with discover-panel/page.tsx so the whole page reads as one product; dark mode handled via dark: variants already in place.
+- Next-round ideas: search-console/updates-card/repo-map/workflow-pipeline/interview-prep still carry text-lg titles & no eyebrow (other agents' scope); shortlist-analytics sky dot could be re-hued to teal in a later pass.
+
+---
+Task ID: 3a
+Agent: frontend-styling-expert
+Task: Apply Emerald Aurora design language to search-console.tsx
+
+Work Log:
+- Read worklog.md (tasks 1 & 12), globals.css Emerald Aurora tokens, page.tsx hero patterns, then the full 1871-line search-console.tsx before editing.
+- Root Card: added `card-elevated ring-gradient` (layered shadow + hairline gradient border), kept overflow-hidden.
+- Card header rebuilt to the section-header pattern: gradient icon chip (from-emerald-500 to-teal-600 + shadow-glow), `eyebrow` "Live search" label with h-px primary gradient rule, CardTitle bumped to text-xl tracking-tight; description text untouched.
+- Location preset chips: active = filled emerald→teal gradient + text-white + shadow-glow + border-transparent; inactive = rounded-full border bg-card + hover:border-primary/40 hover:bg-accent; tiny MapPin icon (h-3 w-3) added to every chip; container gap 1→1.5.
+- Search button: bg-gradient-to-r from-emerald-600 to-teal-600 + shadow-glow + transition-transform hover:scale-[1.03] active:scale-95 (kept min-w-40/radius).
+- JobRowInner rows: rounded + overflow-hidden (clips the fit accent rail to the rounded shape), hover:bg-accent/60 + focus-visible:bg-accent/60 (was muted/40); accent rail, fit badges, framer-motion animations untouched.
+- Portal outcome cards: wrapper gets `card-elevated rounded-xl bg-card`; Globe2 icon moved into a rounded-lg bg-primary/10 text-primary chip.
+- Location routing panel: all sky-* → emerald tokens (border-primary/30 bg-primary/[0.05], icon/title text-primary, resolved span text-primary/80, bullets bg-primary/60); data-testid="location-routing" preserved.
+- Guard badge "−N off-location": refined to rounded-full border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300 (amber kept, warm tone).
+- Form controls: rounded-xl added to both main Inputs, all 5 SelectTriggers, the 5 advanced-filter Inputs and both date Inputs; deadline filter container bumped to rounded-xl.
+- Zero states: main dashed empty state gets bg-dots texture + Search icon in rounded-2xl bg-primary/10 p-3 text-primary chip; all-deadline-hidden amber panel icon chipped in matching amber tint (rounded-2xl bg-amber-500/10 p-3).
+- Loading skeletons: `rounded-xl shimmer` added (sweep over the pulse).
+- Stats: tabular-nums added to header jobs badge, both timer spans, per-outcome jobs badge, "total on board" count and the off-location guard badge.
+- Row company avatar chip switched to token-based bg-primary/10 text-primary.
+- QA: `bun run lint` → 0 problems; `curl` localhost:3000 → 200 with new markup SSR'd; agent-browser verified at 1280px and 390px (no horizontal overflow, sw==cw), 9 preset chips all carry the MapPin icon, active chip + Search button carry the gradient classes, routing panel on primary tokens, zero console errors.
+
+Stage Summary:
+- search-console.tsx now fully matches the Emerald Aurora language: elevated/ring-gradient main card, eyebrow section header, gradient primary action + active location chips with glow, emerald routing panel, polished outcome cards with icon chips, chipped zero-states, shimmer skeletons, tabular numbers — zero logic/state/handler/testid changes (only classNames + presentational wrapper spans; new presentational "Live search" eyebrow per spec).
+- Verification: lint clean, page 200, mobile 390px no overflow, no console errors; sky-* fully purged from the component.
+
+---
+Task ID: 13 (UI redesign round)
+Agent: Z.ai Code (main) + 3x frontend-styling-expert subagents
+Task: Full "Emerald Aurora" UI redesign per user feedback ("the UI is very ugly — make it very aesthetic and impressive and clean"), then push to faisukhan01/job-finder with graph-attributed commits.
+
+Work Log:
+- Design system (globals.css rewritten): emerald-600 primary tokens (light: porcelain mint surfaces; dark: pine-charcoal oklch(0.158) with luminous emerald-400), signature utilities — glass/glass-strong frosted surfaces, gradient-text, card-elevated (layered shadow + hover lift), ring-gradient hairline borders, shadow-glow buttons, bg-dots, aurora-blob drift animation, shimmer sweep, emerald scrollbar-thin, eyebrow labels, link-underline; reduced-motion guard.
+- page.tsx rewritten: sticky glass navbar (gradient logo mark w/ hover tilt, anchor nav Search/Discover/Salary/Workflow, ⌘K + Shortlist + Fit + theme + refresh + gradient GitHub CTA), aurora hero (animated blobs, gradient headline "Find your next role, anywhere on Earth.", primary CTAs), 3 feature stat cards (Routing 6→smart / Guard 0 leaks / Pipeline), consistent section headers with eyebrow + gradient dash, 7xl layout, footer logo chip.
+- Parallel subagent styling (className/presentational only, zero logic changes):
+  - 3a search-console.tsx: elevated card, gradient icon chip header, active preset chip = filled emerald gradient + MapPin icons, gradient Search button, hoverable rounded result rows, portal cards elevated, routing panel sky→primary, amber guard badge refined, rounded-xl inputs, shimmer skeletons, tabular-nums.
+  - 3b status-strip/test-bench/latex/salary: elevated+ring-gradient cards, state-tinted status chips (emerald/amber/rose), gradient Run & Look up & Compile buttons, dotted console output w/ scrollbar-thin, mono path chips, rounded-full hint chips.
+  - 3c discover/workflow/interview/repomap/updates/job-detail-sheet/fit-profile-dialog: eyebrow headers per panel, primary icon chips, gradient step badges in pipeline, elevated cards, polished detail sheet (emerald portal pill, gradient CTA), scrollbar-thin dialogs.
+- Fixed git identity → faisukhan01 <193670919+faisukhan01@users.noreply.github.com>; discarded junk "Z User" UUID commit (kept its logo.svg/robots.txt files folded into this commit).
+- QA: bun run lint → 0 problems; agent-browser: hero/status/search/results/discover/bench/latex/salary/workflow all render in the new language; live search "react developer" @ Lahore, Pakistan → 20 jobs all Pakistani (routing panel: 4 DK boards skipped with reasons, guard active); console clean; dark mode verified (pine + luminous emerald); mobile 390px sw==cw no overflow; sticky glass nav works scrolled.
+- Pushed to origin main (faisukhan01/job-finder) — commits authored faisukhan01 for graph credit.
+
+Stage Summary:
+- SHIPPED: complete Emerald Aurora redesign — every panel, both themes, responsive; zero functional regressions (search, routing, guard all verified live in-browser).
+- Commit graph: local main == origin/main, all commits faisukhan01-attributed.
+- Next-round ideas: command-palette + shortcut-help + shortlist-sheet polish pass (not in this round's file list), skeleton loading for panel fetches on first paint, view-transition page-level animation, per-portal accent hue inside portal cards, aurora parallax on scroll.

@@ -23,7 +23,7 @@ interface LatexResponse {
 
 function OutcomeRow({ label, file, outcome }: { label: string; file: string; outcome: CompileOutcome | null }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-border/70 px-3 py-2.5">
+    <div className="card-elevated flex items-center justify-between gap-3 rounded-xl border border-border/70 px-3 py-2.5">
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           {outcome ? (
@@ -37,16 +37,16 @@ function OutcomeRow({ label, file, outcome }: { label: string; file: string; out
           )}
           <span className="text-sm font-medium">{label}</span>
         </div>
-        <code className="mt-1 block truncate font-mono text-[11px] text-muted-foreground">{file}</code>
+        <code className="mt-1 block w-fit max-w-full truncate rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">{file}</code>
       </div>
       <div className="flex shrink-0 flex-col items-end gap-1">
         {outcome ? (
           outcome.ok ? (
             <>
-              <Badge variant="secondary" className="text-[10px]">
+              <Badge variant="secondary" className="text-[10px] tabular-nums">
                 {outcome.pages ?? "?"} page{(outcome.pages ?? 0) > 1 ? "s" : ""} · {(outcome.bytes! / 1024).toFixed(0)} KB
               </Badge>
-              <span className="text-[10px] text-muted-foreground">
+              <span className="text-[10px] tabular-nums text-muted-foreground">
                 {outcome.engine} · {outcome.seconds.toFixed(1)}s
               </span>
             </>
@@ -96,11 +96,19 @@ export function LatexPanel() {
   }
 
   return (
-    <Card>
+    <Card className="card-elevated">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-          <CardTitle className="text-lg">LaTeX pipeline</CardTitle>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <FileText className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="eyebrow flex items-center gap-2">
+              <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+              Toolchain
+            </p>
+            <CardTitle className="mt-0.5 text-xl font-semibold tracking-tight">LaTeX pipeline</CardTitle>
+          </div>
         </div>
         <CardDescription>
           Compiles the stock templates exactly like /apply would — CV via lualatex, cover letter via xelatex (TinyTeX 2026).
@@ -109,7 +117,12 @@ export function LatexPanel() {
       <CardContent className="space-y-3">
         <OutcomeRow label="Example CV (moderncv)" file="cv/main_example.tex" outcome={result?.cv ?? null} />
         <OutcomeRow label="Example cover letter" file="cover_letters/cover_example.tex" outcome={result?.cover ?? null} />
-        <Button onClick={compile} disabled={loading} size="sm" className="w-full bg-emerald-600 text-white hover:bg-emerald-700 sm:w-auto">
+        <Button
+          onClick={compile}
+          disabled={loading}
+          size="sm"
+          className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-95 sm:w-auto"
+        >
           {loading ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <Play className="mr-1.5 h-3.5 w-3.5" />}
           {loading ? "Compiling…" : "Compile both documents"}
         </Button>

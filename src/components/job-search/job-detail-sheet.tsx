@@ -86,7 +86,7 @@ function DetailBody({ portalId, portalName, job }: { portalId: string; portalNam
   if (detail?.employmentType) {
     const t = translateDanish(detail.employmentType);
     metaChips.push({
-      icon: <Briefcase className="h-3 w-3" />,
+      icon: <Briefcase className="h-3 w-3 text-primary" />,
       label: t.text,
       title: t.translated ? `DK: ${detail.employmentType}` : undefined,
     });
@@ -94,13 +94,13 @@ function DetailBody({ portalId, portalName, job }: { portalId: string; portalNam
   if (detail?.hours) {
     const t = translateDanish(detail.hours);
     metaChips.push({
-      icon: <Clock3 className="h-3 w-3" />,
+      icon: <Clock3 className="h-3 w-3 text-primary" />,
       label: t.text,
       title: t.translated ? `DK: ${detail.hours}` : undefined,
     });
   }
-  if (detail?.date) metaChips.push({ icon: <CalendarDays className="h-3 w-3" />, label: `posted ${detail.date}` });
-  if (detail?.deadline) metaChips.push({ icon: <CalendarDays className="h-3 w-3" />, label: `deadline ${detail.deadline}` });
+  if (detail?.date) metaChips.push({ icon: <CalendarDays className="h-3 w-3 text-primary" />, label: `posted ${detail.date}` });
+  if (detail?.deadline) metaChips.push({ icon: <CalendarDays className="h-3 w-3 text-primary" />, label: `deadline ${detail.deadline}` });
 
   return (
     <>
@@ -152,7 +152,7 @@ function DetailBody({ portalId, portalName, job }: { portalId: string; portalNam
             {detail?.description ? (
               <article className="space-y-2">
                 <h3 className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                  <span className="h-1 w-5 rounded-full bg-emerald-500" />
+                  <span className="h-1 w-5 rounded-full bg-primary" />
                   Job description
                 </h3>
                 <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
@@ -181,7 +181,7 @@ function DetailBody({ portalId, portalName, job }: { portalId: string; portalNam
           {starred.on ? "Starred" : "Star"}
         </Button>
         {detail?.applyUrl || job.url ? (
-          <Button size="sm" asChild className="min-h-9 bg-emerald-600 text-white hover:bg-emerald-700">
+          <Button size="sm" asChild className="min-h-9 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-95">
             <a href={detail?.applyUrl ?? job.url ?? "#"} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
               <Send className="mr-1.5 h-3.5 w-3.5" /> Open posting
             </a>
@@ -220,18 +220,24 @@ export function JobDetailSheet({ open, onOpenChange, portalId, portalName, job }
           <>
             <SheetHeader className="space-y-1 border-b border-border/70 bg-muted/30 px-5 py-4">
               <div className="flex items-center gap-2">
-                <Badge variant="outline" className="text-[10px] uppercase tracking-wide">{portalName}</Badge>
+                <Badge variant="outline" className="rounded-full border-primary/30 bg-primary/10 text-[10px] uppercase tracking-wide text-primary">
+                  {portalName}
+                </Badge>
                 <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-                  <Sparkles className="h-3 w-3" /> fetched live via CLI
+                  <Sparkles className="h-3 w-3 text-primary" /> fetched live via CLI
                 </span>
               </div>
-              <SheetTitle className="text-base leading-snug">{job.title}</SheetTitle>
-              <SheetDescription className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+              <SheetTitle className="text-lg font-semibold leading-snug tracking-tight">{job.title}</SheetTitle>
+              <SheetDescription className="flex flex-wrap items-center gap-1.5 text-xs">
                 {job.company ? (
-                  <span className="inline-flex items-center gap-1"><Building2 className="h-3 w-3" /> {job.company}</span>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-card px-2 py-0.5">
+                    <Building2 className="h-3 w-3 text-primary" /> {job.company}
+                  </span>
                 ) : null}
                 {job.location ? (
-                  <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.location}</span>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-card px-2 py-0.5">
+                    <MapPin className="h-3 w-3 text-primary" /> {job.location}
+                  </span>
                 ) : null}
                 {job.id ? <span className="font-mono text-[10px] opacity-60">id: {job.id}</span> : null}
               </SheetDescription>

@@ -27,14 +27,14 @@ function ChipList({
   onRemove: (v: string) => void;
   inputPlaceholder: string;
   onAdd: (v: string) => void;
-  accent: "emerald" | "rose" | "sky";
+  accent: "emerald" | "rose" | "teal";
   ariaLabel: string;
 }) {
   const [draft, setDraft] = useState("");
   const accentClasses = {
     emerald: "border-emerald-600/30 bg-emerald-600/10 text-emerald-700 dark:text-emerald-300",
     rose: "border-rose-600/30 bg-rose-600/10 text-rose-700 dark:text-rose-300",
-    sky: "border-teal-600/30 bg-teal-600/10 text-teal-700 dark:text-teal-300",
+    teal: "border-teal-600/30 bg-teal-600/10 text-teal-700 dark:text-teal-300",
   }[accent];
 
   function commit() {
@@ -105,9 +105,9 @@ function FitProfileDialogContent({ profile, onDone }: { profile: FitProfile; onD
   }
 
   return (
-    <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+    <DialogContent className="max-h-[85vh] overflow-y-auto scrollbar-thin sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 tracking-tight">
             Fit profile
             <Badge variant="secondary" className="text-[10px]">triage</Badge>
           </DialogTitle>
@@ -148,7 +148,7 @@ function FitProfileDialogContent({ profile, onDone }: { profile: FitProfile; onD
             <Label className="text-xs font-semibold">Preferred locations <span className="font-normal text-muted-foreground">(+8 pts)</span></Label>
             <ChipList
               ariaLabel="Add preferred location"
-              accent="sky"
+              accent="teal"
               values={draft.locations}
               inputPlaceholder="e.g. Copenhagen, Aarhus…"
               onAdd={(v) => setDraft((d) => ({ ...d, locations: [...d.locations, v] }))}
@@ -180,7 +180,7 @@ function FitProfileDialogContent({ profile, onDone }: { profile: FitProfile; onD
             <RotateCcw className="mr-1.5 h-3.5 w-3.5" /> Reset
           </Button>
           <Button variant="outline" size="sm" onClick={onDone}>Cancel</Button>
-          <Button size="sm" onClick={saveAndClose} className="bg-emerald-600 text-white hover:bg-emerald-700">
+          <Button size="sm" onClick={saveAndClose} className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-95">
             Save profile
           </Button>
         </DialogFooter>

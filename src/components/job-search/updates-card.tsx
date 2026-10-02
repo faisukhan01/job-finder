@@ -90,14 +90,20 @@ export function UpdatesCard() {
   const failed = status === "error" || error != null;
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden">
+    <Card className="card-elevated flex h-full flex-col overflow-hidden">
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600/10 text-amber-600 dark:text-amber-400">
-              <GitBranch className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <GitBranch className="h-5 w-5" />
             </span>
-            <CardTitle className="text-lg">Framework updates</CardTitle>
+            <div>
+              <p className="eyebrow flex items-center gap-2">
+                <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+                Framework updates
+              </p>
+              <CardTitle className="mt-0.5 text-xl font-semibold tracking-tight">Framework updates</CardTitle>
+            </div>
           </div>
           <Button
             variant="outline"
@@ -119,8 +125,8 @@ export function UpdatesCard() {
       <CardContent className="flex-1">
         {loading && !data ? (
           <div className="space-y-2">
-            <div className="h-16 animate-pulse rounded-lg bg-muted/60" />
-            <div className="h-8 animate-pulse rounded-lg bg-muted/40" />
+            <div className="shimmer h-16 animate-pulse rounded-lg bg-muted/60" />
+            <div className="shimmer h-8 animate-pulse rounded-lg bg-muted/40" />
           </div>
         ) : (
           <motion.div

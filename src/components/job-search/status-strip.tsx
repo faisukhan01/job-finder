@@ -36,15 +36,19 @@ function StatusCard({
   state: "ok" | "warn" | "error";
 }) {
   const stateColor =
-    state === "ok" ? "text-emerald-600 dark:text-emerald-400" : state === "warn" ? "text-amber-600 dark:text-amber-400" : "text-rose-600 dark:text-rose-400";
+    state === "ok"
+      ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+      : state === "warn"
+        ? "bg-amber-500/10 text-amber-700 dark:text-amber-300"
+        : "bg-rose-500/10 text-rose-700 dark:text-rose-300";
   return (
-    <Card className="border-border/70">
+    <Card className="card-elevated ring-gradient rounded-xl border-border/70">
       <CardContent className="p-4">
-        <div className="flex items-center gap-2">
-          <span className={stateColor}>{icon}</span>
+        <div className="flex items-center gap-2.5">
+          <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg p-2 ${stateColor}`}>{icon}</span>
           <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</span>
         </div>
-        <div className="mt-2 text-sm font-semibold leading-snug">{value}</div>
+        <div className="mt-2.5 text-lg font-bold leading-snug tabular-nums">{value}</div>
         {sub ? <div className="mt-1 text-xs text-muted-foreground leading-snug">{sub}</div> : null}
       </CardContent>
     </Card>
@@ -56,7 +60,7 @@ export function StatusStrip({ status, loading }: StatusStripProps) {
     return (
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="border-border/70">
+          <Card key={i} className="card-elevated ring-gradient shimmer rounded-xl border-border/70">
             <CardContent className="p-4 space-y-2">
               <Skeleton className="h-4 w-20" />
               <Skeleton className="h-5 w-24" />
@@ -80,11 +84,11 @@ export function StatusStrip({ status, loading }: StatusStripProps) {
         value={
           status.repo.cloned ? (
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Cloned
+              <CheckCircle2 className="h-5 w-5 text-emerald-500" /> Cloned
             </span>
           ) : (
             <span className="flex items-center gap-1.5">
-              <XCircle className="h-4 w-4" /> Missing
+              <XCircle className="h-5 w-5" /> Missing
             </span>
           )
         }
@@ -117,9 +121,9 @@ export function StatusStrip({ status, loading }: StatusStripProps) {
         value={
           <span className="flex items-center gap-1.5">
             {installed === status.portals.length ? (
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
             ) : (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin" />
             )}
             {installed}/{status.portals.length} installed
           </span>

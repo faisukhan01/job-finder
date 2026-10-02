@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { StatusStrip } from "@/components/job-search/status-strip";
 import { SearchConsole } from "@/components/job-search/search-console";
 import { TestBench } from "@/components/job-search/test-bench";
@@ -27,12 +26,15 @@ import {
   Github,
   ExternalLink,
   RefreshCw,
-  HeartHandshake,
   Sun,
   Moon,
   SlidersHorizontal,
   Keyboard,
   Command as CommandIcon,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  Star,
 } from "lucide-react";
 import type { EnvStatus, PortalMeta } from "@/lib/job-search/shared-types";
 
@@ -45,14 +47,15 @@ function ThemeToggle() {
   const toggle = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
   return (
     <Button
-      variant="outline"
-      size="sm"
+      variant="ghost"
+      size="icon"
       onClick={toggle}
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
+      className="h-9 w-9 rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
     >
-      <Sun className="hidden h-3.5 w-3.5 dark:block" />
-      <Moon className="h-3.5 w-3.5 dark:hidden" />
+      <Sun className="hidden h-4 w-4 dark:block" />
+      <Moon className="h-4 w-4 dark:hidden" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
@@ -126,99 +129,164 @@ export default function Home() {
   return (
     <ShortlistProvider>
       <div className="relative flex min-h-screen flex-col bg-background">
-        {/* Hero backdrop */}
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-72 overflow-hidden">
-          <div className="absolute -top-32 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-3xl dark:bg-emerald-400/10" />
-          <div className="absolute -top-16 left-[12%] h-52 w-52 rounded-full bg-amber-500/10 blur-3xl" />
-          <div className="absolute right-[10%] top-6 h-40 w-40 rounded-full bg-rose-500/5 blur-3xl" />
+        {/* ── Aurora backdrop (fixed, behind everything) ── */}
+        <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
+          <div className="aurora-blob absolute -top-40 left-[8%] h-[26rem] w-[26rem] bg-emerald-500/[0.13] dark:bg-emerald-400/[0.09]" />
+          <div className="aurora-blob aurora-blob-2 absolute -top-24 right-[4%] h-[20rem] w-[20rem] bg-teal-500/[0.10] dark:bg-teal-400/[0.07]" />
+          <div className="aurora-blob aurora-blob-3 absolute left-[38%] top-[34rem] h-[18rem] w-[22rem] bg-lime-400/[0.07] dark:bg-lime-300/[0.05]" />
         </div>
 
-        <main className="relative mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
-          {/* Header */}
-          <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex items-start gap-3">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600/10 text-emerald-600 ring-1 ring-emerald-600/20 dark:text-emerald-400">
-                <Briefcase className="h-6 w-6" />
+        {/* ── Sticky glass navigation ── */}
+        <header className="sticky top-0 z-50 border-b border-border/60 glass-strong">
+          <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+            <a href="#" className="group flex items-center gap-3" aria-label="Job Finder home">
+              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-glow transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
+                <Briefcase className="h-5 w-5" />
               </span>
-              <div>
-                <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Job Finder</h1>
-                <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                  Live job boards with location-aware routing — type any city + country (e.g.
-                  Lahore, Pakistan) and results stay scoped to it. Rank by fit, star postings and
-                  export a tracker CSV; the full <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">/setup → /scrape → /apply → /interview</code> pipeline lives in the repo.
-                </p>
-              </div>
-            </div>
-            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+              <span className="flex flex-col leading-none">
+                <span className="text-[15px] font-bold tracking-tight">Job Finder</span>
+                <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                  Control Center
+                </span>
+              </span>
+            </a>
+
+            <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+              <a href="#panel-search" className="link-underline rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Search</a>
+              <a href="#panel-discover" className="link-underline rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Discover</a>
+              <a href="#panel-salary" className="link-underline rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Salary</a>
+              <a href="#panel-workflow" className="link-underline rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">Workflow</a>
+            </nav>
+
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={() => setPaletteOpen(true)}
                 aria-label="Open command palette"
                 title="Command palette (⌘K)"
-                className="gap-1.5 pl-2 pr-2 sm:pr-2.5"
+                className="h-9 gap-1.5 rounded-full px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <CommandIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                <kbd className="hidden rounded border border-border bg-muted px-1 font-mono text-[10px] font-semibold sm:inline">⌘K</kbd>
+                <CommandIcon className="h-4 w-4" />
+                <kbd className="hidden rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-semibold sm:inline">⌘K</kbd>
               </Button>
-              <ShortlistButton open={shortlistOpen} onOpenChange={setShortlistOpen} />
-              <Button variant="outline" size="sm" onClick={() => setFitOpen(true)} title="Edit fit profile (F)">
-                <SlidersHorizontal className="mr-1.5 h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Fit profile</span>
+              <span className="hidden sm:block"><ShortlistButton open={shortlistOpen} onOpenChange={setShortlistOpen} /></span>
+              <Button variant="ghost" size="sm" onClick={() => setFitOpen(true)} title="Edit fit profile (F)" className="hidden h-9 rounded-full text-muted-foreground hover:text-foreground md:inline-flex">
+                <SlidersHorizontal className="mr-1.5 h-4 w-4" />
+                <span className="hidden lg:inline">Fit profile</span>
               </Button>
               <ThemeToggle />
-              <Button variant="outline" size="sm" onClick={() => loadStatus(true)} disabled={refreshing}>
-                <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
-                <span className="hidden sm:inline">Refresh status</span>
-                <span className="sm:hidden">Refresh</span>
+              <Button variant="ghost" size="icon" onClick={() => loadStatus(true)} disabled={refreshing} aria-label="Refresh status" title="Refresh status" className="hidden h-9 w-9 rounded-full text-muted-foreground hover:text-foreground sm:inline-flex">
+                <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
               </Button>
-              <Button variant="outline" size="sm" asChild>
+              <Button size="sm" asChild className="h-9 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 shadow-glow transition-transform hover:scale-[1.03] active:scale-95">
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
-                  <Github className="mr-1.5 h-3.5 w-3.5" />
+                  <Github className="mr-1.5 h-4 w-4" />
                   <span className="hidden sm:inline">GitHub</span>
-                  <ExternalLink className="ml-1.5 h-3 w-3 opacity-60" />
+                  <ExternalLink className="ml-1 h-3 w-3 opacity-70" />
                 </a>
               </Button>
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={() => setShortcutsOpen(true)}
                 aria-label="Keyboard shortcuts"
                 title="Keyboard shortcuts (?)"
-                className="hidden text-muted-foreground md:inline-flex"
+                className="hidden h-9 w-9 rounded-full text-muted-foreground hover:text-foreground md:inline-flex"
               >
-                <Keyboard className="h-3.5 w-3.5" />
+                <Keyboard className="h-4 w-4" />
               </Button>
             </div>
-          </header>
-
-          {/* Meta badges */}
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            {status?.repo.frameworkVersion ? (
-              <Badge variant="secondary">framework v{status.repo.frameworkVersion}</Badge>
-            ) : null}
-            {status?.repo.branch ? (
-              <Badge variant="outline" className="font-mono text-[11px]">
-                {status.repo.branch}
-                {status.repo.headCommit ? `@${status.repo.headCommit.split("—")[0]?.trim()}` : ""}
-              </Badge>
-            ) : null}
-            {status?.repo.remoteUrl ? (
-              <span className="font-mono text-[11px] text-muted-foreground">{status.repo.remoteUrl}</span>
-            ) : null}
           </div>
+        </header>
 
-          <Separator className="my-6" />
+        <main className="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 pb-16 sm:px-6 lg:px-8">
+          {/* ── Aurora hero ── */}
+          <section className="pt-10 sm:pt-14" aria-label="Introduction">
+            <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl">
+                <span className="eyebrow inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.06] px-3 py-1.5 text-primary dark:text-emerald-300">
+                  <Sparkles className="h-3 w-3" />
+                  Live job boards · location-aware
+                </span>
+                <h1 className="mt-4 text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
+                  Find your next role,{" "}
+                  <span className="gradient-text">anywhere on Earth.</span>
+                </h1>
+                <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  Search six live boards in parallel — type any{" "}
+                  <span className="font-medium text-foreground">city + country</span> (e.g.{" "}
+                  <span className="font-medium text-emerald-700 dark:text-emerald-300">Lahore, Pakistan</span>) and
+                  results stay scoped to it. Rank by fit, star postings, export a tracker — all through the real CLI toolkit.
+                </p>
+                <div className="mt-6 flex flex-wrap items-center gap-2">
+                  <Button size="lg" onClick={focusSearch} className="h-11 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 px-6 shadow-glow transition-transform hover:scale-[1.03] active:scale-95">
+                    Start searching
+                  </Button>
+                  <Button size="lg" variant="outline" onClick={() => setFitOpen(true)} className="h-11 rounded-full px-5">
+                    <SlidersHorizontal className="mr-2 h-4 w-4" />
+                    Tune fit profile
+                  </Button>
+                </div>
+              </div>
 
-          {/* Environment status */}
-          <section aria-labelledby="env-status">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 id="env-status" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                <span className="h-1 w-6 rounded-full bg-emerald-500" />
-                Environment setup
-              </h2>
+              {/* Feature stat cards */}
+              <dl className="grid w-full max-w-md shrink-0 grid-cols-2 gap-3 sm:grid-cols-2">
+                <div className="card-elevated ring-gradient rounded-2xl border bg-card/80 p-4 backdrop-blur-sm">
+                  <dt className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    <MapPin className="h-3.5 w-3.5 text-primary" /> Routing
+                  </dt>
+                  <dd className="mt-1.5 text-2xl font-bold tabular-nums">6 → smart</dd>
+                  <p className="mt-0.5 text-xs text-muted-foreground">Boards filtered per location</p>
+                </div>
+                <div className="card-elevated ring-gradient rounded-2xl border bg-card/80 p-4 backdrop-blur-sm">
+                  <dt className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    <ShieldCheck className="h-3.5 w-3.5 text-primary" /> Guard
+                  </dt>
+                  <dd className="mt-1.5 text-2xl font-bold tabular-nums">0 leaks</dd>
+                  <p className="mt-0.5 text-xs text-muted-foreground">Off-country jobs auto-hidden</p>
+                </div>
+                <div className="card-elevated ring-gradient col-span-2 rounded-2xl border bg-card/80 p-4 backdrop-blur-sm">
+                  <dt className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    <Star className="h-3.5 w-3.5 text-primary" /> Pipeline
+                  </dt>
+                  <dd className="mt-1.5 text-sm font-medium leading-snug text-muted-foreground">
+                    Rank by fit → shortlist → deadline tracking → CSV tracker & LaTeX CV, powered by the{" "}
+                    <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">/setup → /scrape → /apply → /interview</code> pipeline in the repo.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            {/* Meta badges */}
+            <div className="mt-8 flex flex-wrap items-center gap-2">
+              {status?.repo.frameworkVersion ? (
+                <Badge variant="secondary" className="rounded-full">framework v{status.repo.frameworkVersion}</Badge>
+              ) : null}
+              {status?.repo.branch ? (
+                <Badge variant="outline" className="rounded-full font-mono text-[11px]">
+                  {status.repo.branch}
+                  {status.repo.headCommit ? `@${status.repo.headCommit.split("—")[0]?.trim()}` : ""}
+                </Badge>
+              ) : null}
+              {status?.repo.remoteUrl ? (
+                <span className="font-mono text-[11px] text-muted-foreground">{status.repo.remoteUrl}</span>
+              ) : null}
+            </div>
+          </section>
+
+          {/* ── Environment status ── */}
+          <section aria-labelledby="env-status" className="mt-12">
+            <div className="mb-4 flex items-end justify-between">
+              <div>
+                <p className="eyebrow flex items-center gap-2">
+                  <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+                  Environment setup
+                </p>
+                <h2 id="env-status" className="mt-1 text-xl font-semibold tracking-tight">System readiness</h2>
+              </div>
               {status ? (
-                <span className="text-[11px] text-muted-foreground">
+                <span className="text-[11px] tabular-nums text-muted-foreground">
                   checked {new Date(status.checkedAt).toLocaleTimeString()}
                 </span>
               ) : null}
@@ -226,48 +294,48 @@ export default function Home() {
             <StatusStrip status={status} loading={loading} />
           </section>
 
-          <div className="mt-8 space-y-8">
+          <div className="mt-14 space-y-16">
             {/* Live search */}
-            <section id="panel-search" aria-labelledby="live-search" className="scroll-mt-6">
+            <section id="panel-search" aria-labelledby="live-search" className="scroll-mt-24">
               <SearchConsole portals={portals} />
             </section>
 
             {/* Discover: taxonomy browsing */}
-            <section id="panel-discover" aria-label="Discover categories and occupations" className="scroll-mt-6">
+            <section id="panel-discover" aria-label="Discover categories and occupations" className="scroll-mt-24">
               <DiscoverPanel />
             </section>
 
             {/* Verification + LaTeX */}
-            <section id="panel-testbench" aria-label="Tool panels" className="grid grid-cols-1 gap-8 scroll-mt-6 xl:grid-cols-3">
+            <section id="panel-testbench" aria-label="Tool panels" className="grid grid-cols-1 gap-8 scroll-mt-24 xl:grid-cols-3">
               <div className="xl:col-span-2">
                 <TestBench />
               </div>
-              <div id="panel-latex" className="scroll-mt-6 xl:col-span-1">
+              <div id="panel-latex" className="scroll-mt-24 xl:col-span-1">
                 <LatexPanel />
               </div>
             </section>
 
             {/* Salary + workflow */}
-            <section id="panel-salary" aria-label="Salary and workflow" className="grid grid-cols-1 gap-8 scroll-mt-6 xl:grid-cols-3">
+            <section id="panel-salary" aria-label="Salary and workflow" className="grid grid-cols-1 gap-8 scroll-mt-24 xl:grid-cols-3">
               <div className="xl:col-span-1">
                 <SalaryPanel hintCompanies={salaryCompanies} />
               </div>
-              <div id="panel-workflow" className="scroll-mt-6 xl:col-span-2">
+              <div id="panel-workflow" className="scroll-mt-24 xl:col-span-2">
                 <WorkflowPipeline />
               </div>
             </section>
 
             {/* Interview prep methodology */}
-            <section id="panel-interview" aria-label="Interview prep" className="scroll-mt-6">
+            <section id="panel-interview" aria-label="Interview prep" className="scroll-mt-24">
               <InterviewPrepPanel />
             </section>
 
             {/* Repo map + framework updates */}
-            <section id="panel-repomap" aria-label="Repo map and framework updates" className="grid grid-cols-1 gap-8 scroll-mt-6 xl:grid-cols-3">
+            <section id="panel-repomap" aria-label="Repo map and framework updates" className="grid grid-cols-1 gap-8 scroll-mt-24 xl:grid-cols-3">
               <div className="xl:col-span-2">
                 <RepoMap />
               </div>
-              <div id="panel-updates" className="scroll-mt-6 xl:col-span-1">
+              <div id="panel-updates" className="scroll-mt-24 xl:col-span-1">
                 <UpdatesCard />
               </div>
             </section>
@@ -291,16 +359,18 @@ export default function Home() {
         />
 
         {/* Sticky footer */}
-        <footer className="mt-auto border-t border-border/70 bg-muted/30">
+        <footer className="relative z-10 mt-auto border-t border-border/70 bg-muted/40">
           <div
-            className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8"
-            style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
+            className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8"
+            style={{ paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))" }}
           >
             <span className="flex items-center gap-1.5">
-              <HeartHandshake className="h-3.5 w-3.5" />
+              <span className="flex h-5 w-5 items-center justify-center rounded-md bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
+                <Briefcase className="h-3 w-3" />
+              </span>
               Independent open-source project — not affiliated with Anthropic or Claude Code.
             </span>
-            <span className="flex items-center gap-3">
+            <span className="flex flex-wrap items-center justify-center gap-3">
               <button
                 type="button"
                 onClick={() => setPaletteOpen(true)}
@@ -322,7 +392,7 @@ export default function Home() {
                 for shortcuts
               </button>
               <span className="font-mono">
-                job-finder · powered by ai-job-search v{status?.repo.frameworkVersion ?? "?"} CLI toolkit
+                job-finder · ai-job-search v{status?.repo.frameworkVersion ?? "?"}
               </span>
             </span>
           </div>

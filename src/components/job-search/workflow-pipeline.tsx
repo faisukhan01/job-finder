@@ -51,9 +51,15 @@ const STEPS = [
 
 export function WorkflowPipeline() {
   return (
-    <Card>
+    <Card className="card-elevated">
       <CardHeader>
-        <CardTitle className="text-lg">The framework&apos;s core workflow</CardTitle>
+        <div>
+          <p className="eyebrow flex items-center gap-2">
+            <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+            Pipeline
+          </p>
+          <CardTitle className="mt-1 text-xl font-semibold tracking-tight">The framework&apos;s core workflow</CardTitle>
+        </div>
         <CardDescription>
           Twelve Claude Code slash-commands drive this pipeline. The sandbox runs the search stage directly;
           the rest are agent workflows you run with Claude Code inside the cloned repo.
@@ -64,13 +70,18 @@ export function WorkflowPipeline() {
           {STEPS.map((step, i) => {
             const Icon = step.icon;
             return (
-              <li key={step.cmd} className="relative rounded-lg border border-border/70 p-4">
+              <li
+                key={step.cmd}
+                className="card-elevated relative rounded-lg border border-border/70 p-4 hover:border-primary/40"
+              >
                 <div className="flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-md bg-emerald-600/10 text-emerald-600 dark:text-emerald-400">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <Icon className="h-4 w-4" />
                   </span>
                   <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-semibold">{step.cmd}</code>
-                  <span className="ml-auto text-xs font-medium text-muted-foreground">step {i + 1}</span>
+                  <span className="ml-auto shrink-0 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 px-2 py-0.5 text-[10px] font-semibold tabular-nums text-white">
+                    step {i + 1}
+                  </span>
                 </div>
                 <p className="mt-2 text-sm font-medium">{step.title}</p>
                 <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{step.desc}</p>

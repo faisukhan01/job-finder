@@ -139,14 +139,22 @@ export function SalaryPanel({ hintCompanies }: { hintCompanies: string[] }) {
   }
 
   return (
-    <Card>
+    <Card className="card-elevated">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <Coins className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-          <CardTitle className="text-lg">Salary benchmark</CardTitle>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Coins className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="eyebrow flex items-center gap-2">
+              <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+              Compensation
+            </p>
+            <CardTitle className="mt-0.5 text-xl font-semibold tracking-tight">Salary benchmark</CardTitle>
+          </div>
         </div>
         <CardDescription>
-          Drives the repo&apos;s <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">salary_lookup.py</code>{" "}
+          Drives the repo&apos;s <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px]">salary_lookup.py</code>{" "}
           — fuzzy-matches Danish company names, then breaks pay down per category.
         </CardDescription>
       </CardHeader>
@@ -169,7 +177,11 @@ export function SalaryPanel({ hintCompanies }: { hintCompanies: string[] }) {
                 }}
                 aria-label="Company name"
               />
-              <Button onClick={() => lookup()} disabled={loading} className="shrink-0 bg-emerald-600 text-white hover:bg-emerald-700">
+              <Button
+                onClick={() => lookup()}
+                disabled={loading}
+                className="shrink-0 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-95"
+              >
                 {loading ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Search className="mr-1.5 h-4 w-4" />}
                 Look up
               </Button>
@@ -206,7 +218,7 @@ export function SalaryPanel({ hintCompanies }: { hintCompanies: string[] }) {
                       setCompany(c);
                       lookup(c);
                     }}
-                    className="rounded-full border border-border/70 px-2 py-0.5 text-[11px] text-muted-foreground transition-colors hover:border-emerald-500/50 hover:text-foreground"
+                    className="rounded-full border border-border/70 bg-card px-2 py-0.5 text-[11px] text-muted-foreground transition-all hover:border-primary/40 hover:bg-accent hover:text-foreground active:scale-95"
                   >
                     {c}
                   </button>
@@ -220,7 +232,7 @@ export function SalaryPanel({ hintCompanies }: { hintCompanies: string[] }) {
                   const cats = Object.entries(m.categories ?? {});
                   const all = cats.find(([k]) => k === "all_employees")?.[1];
                   return (
-                    <div key={m.company} className="rounded-lg border border-border/70 p-3">
+                    <div key={m.company} className="rounded-xl border border-border/70 p-3">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="text-sm font-semibold">{m.company}</span>
                         {m.city ? (
@@ -237,17 +249,17 @@ export function SalaryPanel({ hintCompanies }: { hintCompanies: string[] }) {
                                 {key !== "all_employees" ? <Users className="h-2.5 w-2.5" /> : null}
                                 {categoryLabel(key)}
                               </div>
-                              <div className={`mt-0.5 flex items-baseline gap-1 text-lg font-bold ${indexTone(cat.index)}`}>
+                              <div className={`mt-0.5 flex items-baseline gap-1 text-lg font-bold tabular-nums ${indexTone(cat.index)}`}>
                                 {cat.index.toFixed(1)}
                                 {all?.index ? (
-                                  <span className="text-[10px] font-medium text-muted-foreground">
+                                  <span className="text-[10px] font-medium tabular-nums text-muted-foreground">
                                     {cat.index - all.index >= 0 ? "+" : ""}
                                     {(cat.index - all.index).toFixed(1)}
                                   </span>
                                 ) : null}
                               </div>
                               {cat.count ? (
-                                <div className="text-[10px] text-muted-foreground">n={cat.count.toLocaleString()}</div>
+                                <div className="text-[10px] tabular-nums text-muted-foreground">n={cat.count.toLocaleString()}</div>
                               ) : null}
                             </div>
                           ) : null,

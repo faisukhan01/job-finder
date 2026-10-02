@@ -205,7 +205,7 @@ function JobRowInner({ job, showPortal, portalName, portalId, index, fit, isTopM
         }
       }}
       aria-label={`Open details for ${job.title}`}
-      className={`group relative flex cursor-pointer flex-col gap-1.5 border-b border-border/50 px-3 py-3 outline-none transition-colors last:border-b-0 hover:bg-muted/40 focus-visible:bg-muted/40 sm:flex-row sm:items-start sm:gap-3 sm:px-4 ${
+      className={`group relative flex cursor-pointer flex-col gap-1.5 overflow-hidden rounded-lg border-b border-border/50 px-3 py-3 outline-none transition-colors last:border-b-0 hover:bg-accent/60 focus-visible:bg-accent/60 sm:flex-row sm:items-start sm:gap-3 sm:px-4 ${
         isTopMatch ? "bg-emerald-500/[0.06] dark:bg-emerald-400/[0.06]" : ""
       }`}
     >
@@ -233,7 +233,7 @@ function JobRowInner({ job, showPortal, portalName, portalId, index, fit, isTopM
       </button>
       <div className="min-w-0 flex-1">
         <div className="flex items-start gap-2">
-          <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-600/10 text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400">
+          <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold uppercase text-primary">
             {(job.company ?? job.title).trim().charAt(0)}
           </span>
           <div className="min-w-0">
@@ -970,19 +970,25 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
   }, [locSuggestions]);
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="card-elevated ring-gradient overflow-hidden">
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600/10 text-emerald-600 dark:text-emerald-400">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-glow">
               <Search className="h-4 w-4" />
             </span>
-            <CardTitle className="text-lg">Live job search</CardTitle>
+            <div>
+              <p className="eyebrow flex items-center gap-2">
+                <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+                Live search
+              </p>
+              <CardTitle className="mt-1 text-xl font-semibold tracking-tight">Live job search</CardTitle>
+            </div>
           </div>
           {response ? (
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-              <Badge variant="secondary">{totalJobs} jobs</Badge>
-              <span className="inline-flex items-center gap-1">
+              <Badge variant="secondary" className="tabular-nums">{totalJobs} jobs</Badge>
+              <span className="inline-flex items-center gap-1 tabular-nums">
                 <Timer className="h-3 w-3" /> {(response.tookMs / 1000).toFixed(1)}s
               </span>
               {restoredAt ? (
@@ -1037,7 +1043,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
           <div className="space-y-1.5 md:col-span-3">
             <Label htmlFor="portal">Portal</Label>
             <Select value={portal} onValueChange={setPortal}>
-              <SelectTrigger id="portal" aria-label="Job portal">
+              <SelectTrigger id="portal" aria-label="Job portal" className="rounded-xl">
                 <SelectValue placeholder="Select portal" />
               </SelectTrigger>
               <SelectContent>
@@ -1053,6 +1059,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
             <Label htmlFor="query">Keywords</Label>
             <Input
               id="query"
+              className="rounded-xl"
               placeholder="e.g. data engineer, ML, UX designer…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -1068,6 +1075,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
             </Label>
             <Input
               id="location"
+              className="rounded-xl"
               placeholder="City, Country — e.g. Lahore, Pakistan"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -1075,7 +1083,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                 if (e.key === "Enter" && !loading) runSearch();
               }}
             />
-            <div className="flex flex-wrap gap-1" role="group" aria-label="Quick location presets">
+            <div className="flex flex-wrap gap-1.5" role="group" aria-label="Quick location presets">
               {LOCATION_PRESETS.map((l) => {
                 const active = location === l;
                 return (
@@ -1084,12 +1092,13 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                     type="button"
                     onClick={() => setLocation(l)}
                     aria-pressed={active}
-                    className={`rounded-full border px-2 py-0.5 text-[10px] font-medium transition-all active:scale-95 ${
+                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-medium transition-all active:scale-95 ${
                       active
-                        ? "border-emerald-500/60 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                        : "border-border/60 text-muted-foreground hover:border-emerald-500/40 hover:text-foreground"
+                        ? "border-transparent bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-glow"
+                        : "border-border/60 bg-card text-muted-foreground hover:border-primary/40 hover:bg-accent"
                     }`}
                   >
+                    <MapPin className="h-3 w-3 shrink-0" />
                     {l}
                   </button>
                 );
@@ -1102,7 +1111,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                 <ListFilter className="h-3 w-3" /> Age
               </Label>
               <Select value={jobAge} onValueChange={setJobAge}>
-                <SelectTrigger id="jobage" aria-label="Max posting age">
+                <SelectTrigger id="jobage" aria-label="Max posting age" className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1117,7 +1126,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
             <div className="space-y-1.5">
               <Label htmlFor="limit">Per portal</Label>
               <Select value={limit} onValueChange={setLimit}>
-                <SelectTrigger id="limit" aria-label="Results per portal">
+                <SelectTrigger id="limit" aria-label="Results per portal" className="rounded-xl">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1158,7 +1167,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
         ) : null}
 
         {/* Advanced filters (portal-specific) */}
-        <div className="rounded-lg border border-border/60 bg-muted/20">
+        <div className="rounded-xl border border-border/60 bg-muted/20">
           <button
             type="button"
             onClick={() => setFiltersOpen((v) => !v)}
@@ -1190,7 +1199,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                     Workplace type <span className="opacity-60">(LinkedIn)</span>
                   </Label>
                   <Select value={remote} onValueChange={setRemote}>
-                    <SelectTrigger id="f-remote" aria-label="Workplace type filter">
+                    <SelectTrigger id="f-remote" aria-label="Workplace type filter" className="rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1206,7 +1215,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                     Seniority <span className="opacity-60">(Freehire)</span>
                   </Label>
                   <Select value={seniority} onValueChange={setSeniority}>
-                    <SelectTrigger id="f-seniority" aria-label="Seniority filter">
+                    <SelectTrigger id="f-seniority" aria-label="Seniority filter" className="rounded-xl">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1229,7 +1238,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                     value={freehireCountry}
                     onChange={(e) => setFreehireCountry(e.target.value)}
                     placeholder="DK,DE"
-                    className="h-9"
+                    className="h-9 rounded-xl"
                     autoComplete="off"
                   />
                 </div>
@@ -1242,7 +1251,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                     value={freehireCategory}
                     onChange={(e) => setFreehireCategory(e.target.value)}
                     placeholder="backend, ml_ai, devops…"
-                    className="h-9"
+                    className="h-9 rounded-xl"
                     autoComplete="off"
                   />
                 </div>
@@ -1262,7 +1271,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                       )
                     }
                     placeholder="go, kubernetes…"
-                    className="h-9"
+                    className="h-9 rounded-xl"
                     autoComplete="off"
                   />
                 </div>
@@ -1285,7 +1294,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                         if (e.key === "Escape") setLocOpen(false);
                       }}
                       placeholder="København, region or zip…"
-                      className="h-9 pr-8"
+                      className="h-9 rounded-xl pr-8"
                       autoComplete="off"
                       role="combobox"
                       aria-expanded={locOpen}
@@ -1485,7 +1494,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
         ) : null}
 
         <div className="flex flex-wrap items-center gap-3">
-          <Button onClick={() => runSearch()} disabled={loading} className="min-w-40 bg-emerald-600 text-white shadow-sm shadow-emerald-600/20 hover:bg-emerald-700">
+          <Button onClick={() => runSearch()} disabled={loading} className="min-w-40 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-95">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -1520,7 +1529,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
         {loading ? (
           <div className="space-y-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-14 w-full" />
+              <Skeleton key={i} className="h-14 w-full rounded-xl shimmer" />
             ))}
           </div>
         ) : null}
@@ -1549,14 +1558,14 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
 
             {/* Location routing: resolved scope + honestly skipped boards */}
             {response.routing && (response.routing.skippedPortals.length > 0 || response.routing.notices.length > 0) ? (
-              <div className="rounded-lg border border-sky-500/30 bg-sky-500/[0.05] px-3.5 py-3" data-testid="location-routing">
+              <div className="rounded-lg border border-primary/30 bg-primary/[0.05] px-3.5 py-3" data-testid="location-routing">
                 <div className="flex items-start gap-2">
-                  <MapPinned className="mt-0.5 h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400" />
+                  <MapPinned className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                   <div className="min-w-0 flex-1 space-y-1.5">
-                    <p className="text-xs font-semibold text-sky-800 dark:text-sky-300">
+                    <p className="text-xs font-semibold text-primary">
                       Location routing — {response.routing.isRemote ? "Remote / anywhere" : response.routing.requested}
                       {response.routing.countryCode ? (
-                        <span className="ml-1.5 font-normal text-sky-700/80 dark:text-sky-400/80">
+                        <span className="ml-1.5 font-normal text-primary/80">
                           resolved to <span className="font-mono text-[10px]">{response.routing.countryCode}</span>
                           {response.routing.country ? ` · ${response.routing.country}` : ""}
                         </span>
@@ -1570,7 +1579,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                       <ul className="space-y-1">
                         {response.routing.skippedPortals.map((s) => (
                           <li key={s.portalId} className="flex items-start gap-1.5 text-[11px] leading-snug text-muted-foreground">
-                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-sky-500/60" />
+                            <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary/60" />
                             <span>
                               <span className="font-medium text-foreground/80">{s.name}</span> skipped — {s.reason}
                             </span>
@@ -1671,7 +1680,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                               type="date"
                               value={deadlineFrom}
                               onChange={(e) => setDeadlineFrom(e.target.value)}
-                              className="h-8 text-xs"
+                              className="h-8 rounded-xl text-xs"
                             />
                           </div>
                           <div className="space-y-1">
@@ -1683,7 +1692,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                               type="date"
                               value={deadlineTo}
                               onChange={(e) => setDeadlineTo(e.target.value)}
-                              className="h-8 text-xs"
+                              className="h-8 rounded-xl text-xs"
                             />
                           </div>
                         </div>
@@ -1719,14 +1728,16 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                 variants={cardVariants}
                 initial="hidden"
                 animate="show"
-                className="overflow-hidden rounded-lg border border-border/70"
+                className="card-elevated overflow-hidden rounded-xl border border-border/70 bg-card"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/70 bg-muted/40 px-4 py-2.5">
                   <div className="flex items-center gap-2">
-                    <Globe2 className="h-4 w-4 text-muted-foreground" />
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Globe2 className="h-4 w-4" />
+                    </span>
                     <span className="text-sm font-semibold">{portalName(outcome.portalId)}</span>
                     {outcome.ok ? (
-                      <Badge variant="secondary" className="text-[11px]">
+                      <Badge variant="secondary" className="text-[11px] tabular-nums">
                         {outcome.jobs.length} jobs
                       </Badge>
                     ) : (
@@ -1736,7 +1747,7 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                     )}
                     {outcome.locationFiltered ? (
                       <Badge
-                        className="border border-amber-500/40 bg-amber-500/10 text-[10px] font-medium text-amber-700 dark:text-amber-400"
+                        className="rounded-full border-amber-500/40 bg-amber-500/10 text-[10px] font-medium tabular-nums text-amber-700 dark:text-amber-300"
                         title="Postings clearly located in another country were hidden by the location guard"
                       >
                         <ShieldCheck className="mr-0.5 h-3 w-3" />
@@ -1745,8 +1756,8 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
                     ) : null}
                   </div>
                   <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                    {outcome.total != null ? <span>{outcome.total.toLocaleString()} total on board</span> : null}
-                    <span className="inline-flex items-center gap-1">
+                    {outcome.total != null ? <span className="tabular-nums">{outcome.total.toLocaleString()} total on board</span> : null}
+                    <span className="inline-flex items-center gap-1 tabular-nums">
                       <Timer className="h-3 w-3" /> {(outcome.tookMs / 1000).toFixed(1)}s
                     </span>
                   </div>
@@ -1818,8 +1829,10 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
 
             {/* Every posting hidden by the deadline window — offer a one-click reset. */}
             {deadlineActive && totalJobs > 0 && visibleJobs === 0 ? (
-              <div className="flex flex-col items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/[0.05] px-4 py-6 text-center">
-                <CalendarRange className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <div className="flex flex-col items-center gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/[0.05] px-4 py-6 text-center">
+                <span className="flex items-center justify-center rounded-2xl bg-amber-500/10 p-3 text-amber-600 dark:text-amber-400">
+                  <CalendarRange className="h-5 w-5" />
+                </span>
                 <p className="text-sm font-medium">The deadline window hides all {totalJobs} postings</p>
                 <p className="max-w-md text-xs text-muted-foreground">
                   Nothing closes within <span className="font-medium text-amber-700 dark:text-amber-400">{deadlineLabel}</span>.
@@ -1843,8 +1856,10 @@ export function SearchConsole({ portals }: { portals: PortalMeta[] }) {
         ) : null}
 
         {!response && !loading && !error ? (
-          <div className="rounded-lg border border-dashed border-border/70 px-4 py-10 text-center">
-            <Search className="mx-auto h-8 w-8 text-muted-foreground/50" />
+          <div className="rounded-xl border border-dashed border-border/70 bg-dots px-4 py-10 text-center">
+            <span className="mx-auto flex w-fit items-center justify-center rounded-2xl bg-primary/10 p-3 text-primary">
+              <Search className="h-6 w-6" />
+            </span>
             <p className="mt-3 text-sm font-medium">Try a live search</p>
             <p className="mx-auto mt-1 max-w-md text-xs text-muted-foreground">
               Searches are location-aware: type a city + country (e.g. “Lahore, Pakistan”) and

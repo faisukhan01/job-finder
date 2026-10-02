@@ -168,14 +168,20 @@ export function DiscoverPanel() {
   }, [occQuery, toast]);
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="card-elevated overflow-hidden">
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-600/10 text-amber-600 dark:text-amber-400">
-              <Compass className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <Compass className="h-5 w-5" />
             </span>
-            <CardTitle className="text-lg">Discover</CardTitle>
+            <div>
+              <p className="eyebrow flex items-center gap-2">
+                <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+                Discover
+              </p>
+              <CardTitle className="mt-0.5 text-xl font-semibold tracking-tight">Discover</CardTitle>
+            </div>
             <Badge variant="outline" className="text-[10px] uppercase tracking-wide text-muted-foreground">
               live taxonomies
             </Badge>
@@ -235,7 +241,7 @@ export function DiscoverPanel() {
               </div>
             ) : null}
             <p className="mt-3 flex items-center gap-1 text-[11px] text-muted-foreground">
-              <Sparkles className="h-3 w-3 text-amber-500" />
+              <Sparkles className="h-3 w-3 text-primary" />
               Counts are live from jobdanmark.dk — click a category to fill the search console with that filter.
             </p>
           </TabsContent>
@@ -254,7 +260,11 @@ export function DiscoverPanel() {
                 placeholder="Danish occupation, e.g. udvikler, sygeplejerske, murer…"
                 aria-label="Occupation search"
               />
-              <Button type="submit" disabled={occLoading} className="shrink-0 bg-amber-600 text-white hover:bg-amber-700">
+              <Button
+                type="submit"
+                disabled={occLoading}
+                className="shrink-0 bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-95"
+              >
                 {occLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <BookOpen className="h-4 w-4" />}
                 <span className="ml-1.5 hidden sm:inline">Find</span>
               </Button>
@@ -281,7 +291,7 @@ export function DiscoverPanel() {
                           <TooltipTrigger asChild>
                             <button
                               onClick={() => requestSearch({ portal: "jobnet", query: o.label, ts: Date.now() })}
-                              className="inline-flex max-w-full items-center gap-1 rounded-full border border-border/70 bg-card/60 px-2.5 py-1 text-xs transition-all hover:border-emerald-500/50 hover:bg-emerald-500/[0.06]"
+                              className="inline-flex max-w-full items-center gap-1 rounded-full border bg-card px-2.5 py-1 text-xs transition-all hover:border-primary/40 hover:bg-accent"
                               title={tr.translated ? `DK: ${o.label}` : undefined}
                             >
                               {tr.translated ? (

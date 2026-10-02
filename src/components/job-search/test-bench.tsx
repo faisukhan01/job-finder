@@ -97,11 +97,19 @@ export function TestBench() {
   const activeResult = activeOutput ? suites[activeOutput].result : null;
 
   return (
-    <Card>
+    <Card className="card-elevated">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <FlaskConical className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-          <CardTitle className="text-lg">Verification bench</CardTitle>
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <FlaskConical className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="eyebrow flex items-center gap-2">
+              <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+              Verification
+            </p>
+            <CardTitle className="mt-0.5 text-xl font-semibold tracking-tight">Verification bench</CardTitle>
+          </div>
         </div>
         <CardDescription>
           The repo&apos;s own CI checks, runnable on demand — identical to what GitHub Actions runs on every push.
@@ -116,7 +124,7 @@ export function TestBench() {
             return (
               <div
                 key={id}
-                className={`flex flex-col justify-between rounded-lg border p-3 transition-colors ${
+                className={`card-elevated ring-gradient flex flex-col justify-between rounded-xl border p-3 transition-colors ${
                   activeOutput === id ? "border-emerald-500/60 bg-emerald-500/5" : "border-border/70"
                 }`}
               >
@@ -140,7 +148,7 @@ export function TestBench() {
                         {result.summary}
                       </Badge>
                     ) : state.running ? (
-                      <Badge variant="outline" className="text-[10px]">
+                      <Badge variant="outline" className="shimmer text-[10px]">
                         running…
                       </Badge>
                     ) : hydrated ? (
@@ -157,7 +165,7 @@ export function TestBench() {
                     variant={result ? "outline" : "default"}
                     disabled={state.running || anyRunning}
                     onClick={() => runSuite(id)}
-                    className="h-8 flex-1 text-xs"
+                    className="h-8 flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-xs text-white shadow-glow transition-transform hover:scale-[1.03] active:scale-95"
                   >
                     {state.running ? (
                       <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
@@ -191,17 +199,17 @@ export function TestBench() {
                 Output — {SUITE_META[activeOutput].label}
               </span>
               {activeResult ? (
-                <span className="text-[11px] text-muted-foreground">
+                <span className="text-[11px] tabular-nums text-muted-foreground">
                   finished {new Date(activeResult.finishedAt).toLocaleTimeString()}
                 </span>
               ) : null}
             </div>
-            <pre className="max-h-80 overflow-auto scrollbar-thin rounded-lg border border-border/70 bg-zinc-950 p-3 text-[11px] leading-relaxed text-zinc-200 dark:bg-zinc-900">
+            <pre className="bg-dots scrollbar-thin max-h-80 overflow-auto rounded-xl border border-border/70 bg-muted/50 p-3 font-mono text-[11px] leading-relaxed text-foreground/90">
               {activeResult?.output || "No output captured."}
             </pre>
           </div>
         ) : (
-          <div className="flex items-center gap-2 rounded-lg border border-dashed border-border/70 px-4 py-6 text-xs text-muted-foreground">
+          <div className="bg-dots flex items-center gap-2 rounded-xl border border-dashed border-border/70 px-4 py-6 text-xs text-muted-foreground">
             <RefreshCw className="h-3.5 w-3.5" />
             Run any suite above to see its raw console output here. Results are cached per server session.
           </div>

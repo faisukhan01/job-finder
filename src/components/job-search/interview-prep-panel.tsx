@@ -73,8 +73,8 @@ function GuideBody({ lines }: { lines: string[] }) {
         flushBullets();
         flushNumbers();
         out.push(
-          <div key={`q-${out.length}`} className="flex items-start gap-2 rounded-md border-l-2 border-amber-500/60 bg-amber-500/[0.05] px-3 py-2">
-            <Quote className="mt-0.5 h-3 w-3 shrink-0 text-amber-500" />
+          <div key={`q-${out.length}`} className="flex items-start gap-2 rounded-md border-l-2 border-primary/40 bg-primary/[0.05] px-3 py-2">
+            <Quote className="mt-0.5 h-3 w-3 shrink-0 text-primary" />
             <span className="text-sm italic leading-relaxed">{inline(line.slice(2))}</span>
           </div>,
         );
@@ -206,14 +206,20 @@ export function InterviewPrepPanel() {
   }
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="card-elevated overflow-hidden">
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-600/10 text-rose-600 dark:text-rose-400">
-              <GraduationCap className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <GraduationCap className="h-5 w-5" />
             </span>
-            <CardTitle className="text-lg">Interview prep</CardTitle>
+            <div>
+              <p className="eyebrow flex items-center gap-2">
+                <span className="h-px w-6 bg-gradient-to-r from-primary to-transparent" />
+                Interview prep
+              </p>
+              <CardTitle className="mt-0.5 text-xl font-semibold tracking-tight">Interview prep</CardTitle>
+            </div>
             <Badge variant="outline" className="text-[10px] uppercase tracking-wide text-muted-foreground">
               from the repo
             </Badge>

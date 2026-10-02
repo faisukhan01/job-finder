@@ -317,3 +317,28 @@ Stage Summary:
 - Features: deadline window now survives reload (saved with the search AND synced on change); per-portal + global zero-state explanations with one-click clear when the window hides everything; ⌘K palette gains a bare-query "Run “…” on <last board>" fallback (Enter + hint row) closing the loop from "no command matches" to a live CLI search; stage-history popover shows relative times with exact-timestamp tooltips; markdown snapshot exports an emoji fit legend + per-row fit emojis.
 - Debug lessons: cmdk 1.1.1 late-mounted items never receive onSelect (registry/score timing) — display-only + document-capture Enter is the reliable pattern; runBareQuery-style deferred closures must be invoked, not just called.
 - Next-round ideas: palette hint could offer portal choice (type ">jobnet nurse" grammar); bulk-stage Apply could also support relative moves ("advance to next non-final stage"); deadline zero-state could offer widening presets (≤30d) inline; the md snapshot could embed the framework's score band thresholds for /rank parity; consider upstream rebase dry-run view now that origin has 3 new commits (read-only diff triage).
+
+---
+Task ID: 12 (user-reported bug round)
+Agent: Z.ai Code (main)
+Task: Fix "Lahore, Pakistan shows other countries' jobs" completely, change the favicon, push everything to github.com/faisukhan01/job-finder with commits attributed to the user's graph.
+
+Work Log:
+- Bug reproduced via POST /api/search {"location":"Lahore, Pakistan"}: jobindex/jobnet/jobbank/jobdanmark all returned Danish postings (Rønne, Kolding, Viby J, Aarhus…). Root cause: the 4 Danish CLIs have NO location parameter and freehire only filters by ISO country code — location was only honored by LinkedIn.
+- NEW src/lib/job-search/location-routing.ts:
+  - parseLocation(): city+country extraction with ~150 country names/aliases/demonyms + ~200 major-city map (bare "Lahore" → PK; "Copenhagen" → DK); Remote detection; mode = none|denmark|remote|international|unresolved.
+  - planLocationSearch(): Denmark-only boards skipped (with per-board honest reasons) for foreign/remote searches; linkedin always included; freehire included only when a country resolves.
+  - guardJobsByLocation(): defense-in-depth result filter — drops jobs whose location clearly names a DIFFERENT country/major city (word-boundary matching), counts hidden.
+- /api/search rewritten: plan-based fan-out, effective filters inject country=<ISO2> for freehire (denmark→DK too), explicit single-board picks still run but emit routing.notices warnings, response gains routing{} + per-outcome locationFiltered.
+- shared-types.ts: LocationRouting/SkippedPortal types, optional routing/locationFiltered (old session restores stay compatible).
+- search-console.tsx: sky "Location routing" panel (resolved PK · Pakistan + skipped list + notices + guard note), per-outcome "−N off-location" amber guard badge, 9 one-tap location preset chips under the Location input (Lahore/Karachi/Islamabad/Dubai/London/Berlin/NY/Copenhagen/Remote), label "(scopes every portal)", rewritten empty-state copy.
+- Verified via API: Lahore → only linkedin+freehire, all results Pakistani (Lahore, Islamabad, Sindh), 0 guard-hidden; "Lahore" city-only also resolves PK; Copenhagen, Denmark → all 6 boards (regression OK).
+- Verified via agent-browser: clicked Lahore chip → search → routing panel renders, only LinkedIn/Freehire cards, sample rows "Lahore, Punjab, Pakistan"; console clean; mobile 390px no overflow.
+- Favicon: AI-generated emerald briefcase+magnifier icon → sharp-resized to src/app/icon.png (512) + src/app/apple-icon.png (180); removed the Z.ai CDN icon from layout metadata; verified <link rel=icon> injected.
+- Branding: layout.tsx metadata ("Job Finder — Control Center"), page.tsx hero + footer rebranded, GITHUB_URL → faisukhan01/job-finder.
+- Push: fresh orphan history (5 commits) authored faisukhan01 <193670919+faisukhan01@users.noreply.github.com> (graph-attributed), .gitignore hardened (db, .env*, logs, tool-results, examples, mini-services, .zscripts, pycache), inner ai-job-search/.git moved aside during commit then restored (updates-card upstream check still works), secret scan clean (no ghp_/env/db in tree), pushed deploy-main→main; local main now tracks origin/main. Remote verified: 5 commits, README.md live.
+
+Stage Summary:
+- FIXED: location now scopes EVERY search — wrong-country results impossible via routing + guard; skipped boards are explained in the UI instead of silently returning junk.
+- NEW: favicon + branding; location preset chips; routing transparency panel; off-location guard badges.
+- Next-round ideas: city→country map could live behind /api/suggest for autocomplete; add a "search anyway" one-click for skipped boards; freehire region mapping (eu/nordics) for country-less European searches; consider persisting last location per browser profile.
